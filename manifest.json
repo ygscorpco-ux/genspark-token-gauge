@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Genspark Token Gauge",
+  "version": "3.0.0",
+  "description": "젠스파크 AI 채팅의 토큰 사용량을 실시간 추적하고 압축 전 경고합니다",
+  "permissions": [
+    "storage"
+  ],
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.genspark.ai/*",
+        "https://genspark.ai/*"
+      ],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Genspark Token Gauge 설정",
+    "default_icon": {
+      "16": "icon16.png",
+      "48": "icon48.png"
+    }
+  }
+}

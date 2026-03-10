@@ -1,0 +1,384 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 360px;
+        font-family: "Segoe UI", "Malgun Gothic", sans-serif;
+        background: #0d1117;
+        color: #e6edf3;
+      }
+
+      /* 헤더 */
+      .header {
+        padding: 16px 20px 0;
+      }
+      .header h2 {
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-bottom: 2px;
+      }
+      .subtitle {
+        font-size: 10px;
+        color: #484f58;
+      }
+
+      /* 탭 */
+      .tabs {
+        display: flex;
+        gap: 0;
+        margin-top: 12px;
+        border-bottom: 1px solid #21262d;
+      }
+      .tab {
+        flex: 1;
+        padding: 8px 0;
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: #8b949e;
+        font-size: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .tab.active {
+        color: #58a6ff;
+        border-bottom-color: #58a6ff;
+      }
+      .tab:hover:not(.active) {
+        color: #e6edf3;
+      }
+
+      /* 패널 공통 */
+      .panel {
+        padding: 16px 20px 20px;
+      }
+
+      /* 설정 탭 */
+      .section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: #58a6ff;
+        margin-top: 12px;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid #21262d;
+      }
+      label {
+        display: block;
+        font-size: 11px;
+        font-weight: 600;
+        color: #8b949e;
+        margin-bottom: 4px;
+        margin-top: 10px;
+      }
+      input[type="number"] {
+        width: 100%;
+        padding: 8px 10px;
+        background: #161b22;
+        border: 1px solid #30363d;
+        border-radius: 6px;
+        color: #e6edf3;
+        font-size: 13px;
+        font-family: "Consolas", monospace;
+      }
+      input:focus {
+        outline: none;
+        border-color: #58a6ff;
+      }
+      .help {
+        font-size: 10px;
+        color: #484f58;
+        margin-top: 3px;
+        line-height: 1.4;
+      }
+      .row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .btn-primary {
+        width: 100%;
+        margin-top: 16px;
+        padding: 10px;
+        background: #238636;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      .btn-primary:hover {
+        background: #2ea043;
+      }
+      .saved {
+        text-align: center;
+        font-size: 12px;
+        color: #3fb950;
+        margin-top: 8px;
+        display: none;
+      }
+      .preset {
+        margin-top: 12px;
+        display: flex;
+        gap: 6px;
+      }
+      .preset button {
+        flex: 1;
+        padding: 6px;
+        font-size: 10px;
+        background: #21262d;
+        color: #8b949e;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      .preset button:hover {
+        background: #30363d;
+        color: #e6edf3;
+      }
+      .tip {
+        margin-top: 14px;
+        padding: 10px;
+        background: #161b22;
+        border: 1px solid #21262d;
+        border-radius: 6px;
+        font-size: 10px;
+        color: #8b949e;
+        line-height: 1.6;
+      }
+      .tip strong {
+        color: #e6edf3;
+      }
+
+      /* 대시보드 탭 */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 14px;
+      }
+      .stat-card {
+        background: #161b22;
+        border: 1px solid #21262d;
+        border-radius: 8px;
+        padding: 10px 8px;
+        text-align: center;
+      }
+      .stat-card .num {
+        font-size: 20px;
+        font-weight: 800;
+        color: #58a6ff;
+        display: block;
+      }
+      .stat-card .lbl {
+        font-size: 9px;
+        color: #484f58;
+        margin-top: 2px;
+        display: block;
+      }
+      .hist-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 260px;
+        overflow-y: auto;
+      }
+      .hist-item {
+        background: #161b22;
+        border: 1px solid #21262d;
+        border-radius: 6px;
+        padding: 8px 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+      .hist-item .name {
+        font-size: 11px;
+        font-weight: 600;
+        color: #e6edf3;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 160px;
+      }
+      .hist-item .meta {
+        font-size: 10px;
+        color: #484f58;
+        margin-top: 2px;
+      }
+      .hist-item .tok {
+        font-size: 11px;
+        font-weight: 700;
+        color: #3fb950;
+        flex-shrink: 0;
+        text-align: right;
+      }
+      .hist-item .tok small {
+        display: block;
+        font-size: 9px;
+        color: #484f58;
+        font-weight: 400;
+      }
+      .empty-state {
+        text-align: center;
+        padding: 30px 0;
+        font-size: 11px;
+        color: #484f58;
+        line-height: 1.8;
+      }
+      .btn-danger {
+        width: 100%;
+        margin-top: 12px;
+        padding: 8px;
+        background: none;
+        border: 1px solid #30363d;
+        color: #8b949e;
+        border-radius: 6px;
+        font-size: 11px;
+        cursor: pointer;
+      }
+      .btn-danger:hover {
+        border-color: #f85149;
+        color: #f85149;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h2>⚡ Genspark Token Gauge</h2>
+      <div class="subtitle">v3.0 — 실측 기반 설정</div>
+      <div class="tabs">
+        <button class="tab active" id="tab-settings">⚙️ 설정</button>
+        <button class="tab" id="tab-dashboard">📊 대시보드</button>
+      </div>
+    </div>
+
+    <!-- 설정 탭 -->
+    <div class="panel" id="panel-settings">
+      <div class="section-title">컨텍스트 윈도우</div>
+      <label>임계값 (토큰)</label>
+      <input
+        type="number"
+        id="contextWindow"
+        value="55000"
+        min="10000"
+        max="200000"
+        step="1000"
+      />
+      <div class="help">
+        실측 기반 기본값: 55,000 토큰. 압축 발생 시점을 기록하며 조정하세요.
+      </div>
+      <div class="preset">
+        <button id="preset-30k">보수적 30K</button>
+        <button id="preset-45k">안전 45K</button>
+        <button id="preset-55k">실측 55K</button>
+      </div>
+
+      <div class="section-title">경고 단계 (%)</div>
+      <div class="row">
+        <div>
+          <label>🔵 알림</label>
+          <input
+            type="number"
+            id="thresholdNotice"
+            value="50"
+            min="20"
+            max="60"
+            step="5"
+          />
+        </div>
+        <div>
+          <label>🟡 주의</label>
+          <input
+            type="number"
+            id="thresholdWarning"
+            value="70"
+            min="40"
+            max="80"
+            step="5"
+          />
+        </div>
+      </div>
+      <div class="row" style="margin-top: 8px">
+        <div>
+          <label>🟠 위험</label>
+          <input
+            type="number"
+            id="thresholdDanger"
+            value="85"
+            min="60"
+            max="95"
+            step="5"
+          />
+        </div>
+        <div>
+          <label>🔴 긴급</label>
+          <input
+            type="number"
+            id="thresholdCritical"
+            value="95"
+            min="80"
+            max="99"
+            step="1"
+          />
+        </div>
+      </div>
+
+      <button class="btn-primary" id="saveBtn">설정 저장</button>
+      <div class="saved" id="savedMsg">
+        ✅ 저장 완료! 젠스파크 페이지를 새로고침하세요.
+      </div>
+
+      <div class="tip">
+        <strong>캘리브레이션:</strong><br />
+        압축이 발생했을 때 토큰 수를 확인하고 임계값을 조정하세요.<br /><br />
+        <strong>실측 데이터:</strong><br />
+        • 42,594 토큰 → 압축 안 됨<br />
+        • 53,000~55,500 토큰 → 압축 발생
+      </div>
+    </div>
+
+    <!-- 대시보드 탭 -->
+    <div class="panel" id="panel-dashboard" style="display: none">
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="num" id="d-count">0</span>
+          <span class="lbl">저장 횟수</span>
+        </div>
+        <div class="stat-card">
+          <span class="num" id="d-avg">0</span>
+          <span class="lbl">평균 토큰</span>
+        </div>
+        <div class="stat-card">
+          <span class="num" id="d-total">0</span>
+          <span class="lbl">총 메시지</span>
+        </div>
+      </div>
+
+      <div class="section-title">저장된 대화 목록</div>
+      <div class="hist-list" id="d-hist-list">
+        <div class="empty-state">
+          📭 저장된 대화가 없습니다.<br />💾 버튼으로 대화를 저장하면 여기에
+          표시됩니다.
+        </div>
+      </div>
+      <button class="btn-danger" id="d-clear-btn">🗑️ 기록 전체 초기화</button>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
